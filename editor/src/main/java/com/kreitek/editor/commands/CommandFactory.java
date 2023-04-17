@@ -2,8 +2,11 @@ package com.kreitek.editor.commands;
 
 import com.kreitek.editor.*;
 
+import java.util.Stack;
+
 public class CommandFactory {
     private static final CommandParser commandParser = new CommandParser();
+    private Stack<Command> undoStack = new Stack<>();
 
     public Command getCommand(String commandLine) throws BadCommandException, ExitException {
         String[] args = commandParser.parse(commandLine);
@@ -17,8 +20,11 @@ public class CommandFactory {
     }
 
     private Command createUndoCommand() {
-        // TODO create undo command
-        return null;
+        if (undoStack.empty()) {
+            System.out.println("No hay cambios para deshacer.");
+            return null;
+        }
+        return undoStack.pop();
     }
 
     private Command createDeleteCommand(String lineNumber) {
